@@ -13,9 +13,9 @@ df = pd.read_csv(data, header=None, sep=',')
 col_names =['Tuổi', 'Giới tính', 'Ô nhiễm không khí', 'Sử dụng rượu', 'Dị ứng bụi', 'Nguy cơ nghề nghiệp', 'Yếu tố di truyền', 'Bệnh phổi mãn tính', 'Chế độ ăn',
             'Béo phì', 'Hút thuốc', 'Ảnh hưởng khói thuốc', 'Sơn móng tay', 'Môi trường lạnh', 'Chuẩn đoán'    ]
 df.columns = col_names
+x = df[['Giới tính', 'Ô nhiễm không khí', 'Sử dụng rượu', 'Dị ứng bụi', 'Nguy cơ nghề nghiệp', 'Yếu tố di truyền', 'Bệnh phổi mãn tính', 'Chế độ ăn',
+            'Béo phì', 'Hút thuốc', 'Ảnh hưởng khói thuốc', 'Sơn móng tay', 'Môi trường lạnh']]
 
-#print (df)
-x = [var for var in df.columns if df[var].dtype!='O']
 y = [var for var in df.columns if df[var].dtype=='O']
 #preprocessing
 from sklearn import preprocessing
@@ -29,38 +29,12 @@ df['Chuẩn đoán'] = yle
 #print(df[y].isnull().sum())
 
 from sklearn.model_selection import train_test_split
-x_train, x_test, y_train, y_test = train_test_split(df[x], df['Chuẩn đoán'], test_size = 0.3, random_state = 0)
+x_train, x_test, y_train, y_test = train_test_split(x, df['Chuẩn đoán'], test_size = 0.3, random_state = 0)
 
-#print(x_test)
-#print(y_test)
 
 from sklearn.tree import DecisionTreeClassifier
 clf = DecisionTreeClassifier()
-pred = clf.fit(x_train, y_train)
-y_pred = clf.predict(x_test)
-
-from sklearn.metrics import accuracy_score
-#print('Model accuracy score: {0:0.2f}'. format(accuracy_score(y_test, y_pred)))
-
-y_pred_train = clf.predict(x_train)
-#print('Training-set accuracy score: {0:0.2f}'. format(accuracy_score(y_train, y_pred_train)))
-#print('Training set score: {:.2f}'.format(gnb.score(x_train, y_train)))
-#print('Test set score: {:.2f}'.format(gnb.score(x_test, y_test)))
-null_acc = (31/(31+23))
-#print('Null accuracy score: {:.2f}'.format(null_acc))
-
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
-#print('Confusion matrix\n\n', cm)
-#print('\nTrue Positives(TP) = ', cm[0,0])
-#print('\nTrue Negatives(TN) = ', cm[1,1])
-#print('\nFalse Positives(FP) = ', cm[0,1])
-#print('\nFalse Negatives(FN) = ', cm[1,0])
-
-#TP = cm[0,0]
-#TN = cm[1,1]
-#FP = cm[0,1]
-#FN = cm[1,0]
+pred = clf.fit(x, df['Chuẩn đoán'])
 
 
 name = input('Mời bạn nhập họ và tên: ')
@@ -82,20 +56,9 @@ m = input('Bạn có thường xuyên ngửi khói thuốc không? \n1.Rất ít
 n = input('Bạn có sơn móng tay, móng chân không? \n1.Rất ít \n2.Ít \n3.Trung bình \n4.Nhiều \n5.Rất nhiều \n')
 o = input('Bạn có sống ở môi trường lạnh không? \n1.Rất ít \n2.Ít \n3.Trung bình \n4.Nhiều \n5.Rất nhiều \n')
 
-pre = clf.predict([[int(a),int(b),int(c),int(d),int(e),int(f),int(g),int(h),int(i),int(k),int(l),int(m),int(n),int(o)]])
+pre = clf.predict([[int(b),int(c),int(d),int(e),int(f),int(g),int(h),int(i),int(k),int(l),int(m),int(n),int(o)]])
 if pre == [0]:
     print ('Bệnh nhân ' + name + ' khả năng cao mắc bệnh ung thư')
 else:
     print ('Bệnh nhân ' + name + ' không mắc bệnh ung thư')
 
-from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication
-
-Form, Window = uic.loadUiType("test.ui")
-
-app = QApplication([])
-window = Window()
-form = Form()
-form.setupUi(window)
-window.show()
-app.exec()
